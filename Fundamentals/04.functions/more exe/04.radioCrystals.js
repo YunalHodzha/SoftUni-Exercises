@@ -1,74 +1,114 @@
 function radioCrystals(arr) {
-    let finalThickness = arr[0];
-    let currentCrystal = 0;
+    let finalThickness = arr.shift();
+    let counter = 0;
 
-        for(let i=1; i<arr.length; i++) {
-            currentCrystal = arr[i];
-            console.log(`Processing chunk ${currentCrystal} microns`);
+    for (let ore of arr) {
 
-            let cutCounter = 0;
-            while((currentCrystal / 4) >= finalThickness) {
-                currentCrystal = currentCrystal /4;
-                cutCounter++ ;
-            }
+        console.log(`Processing chunk ${ore} microns`);
+        if (ore === finalThickness) {
+            console.log(`Finished crystal ${ore} microns`);
+            continue;
+        }
 
-            console.log(`Cut x${cutCounter}`);
-            transportAndRounding();
-            currentCrystal = Math.floor(currentCrystal);
-            isOver()
-            
+        ore = cut(ore);
+        if (ore === finalThickness) {
+            console.log(`Finished crystal ${ore} microns`);
+            continue;
+        }
+
+        ore = lap(ore);
+        if (ore === finalThickness) {
+            console.log(`Finished crystal ${ore} microns`);
+            continue;
+        }
+
+        ore = grind(ore);
+        if (ore === finalThickness) {
+            console.log(`Finished crystal ${ore} microns`);
+            continue;
+        }
+
+        ore = etch(ore);
+        if (ore === finalThickness) {
+            console.log(`Finished crystal ${ore} microns`);
+            continue;
+        }
+
+        ore = xRay(ore);
+        if (ore === finalThickness) {
+            console.log(`Finished crystal ${ore} microns`);
+            continue;
+        }
+    }
+
+    function transporting(ore) {
+        ore = Math.floor(ore);
+        console.log(`Transporting and washing`);
+        return ore;
+    }
+
+    function cut(ore) {
+        while ((ore / 4) >= finalThickness) {
+            ore = ore / 4;
+            counter++;
+        }
+        if (counter >= 1) {
+            console.log(`Cut x${counter}`);
             counter = 0;
-            while((currentCrystal * 0.80) >= finalThickness) {
-                currentCrystal = currentCrystal * 0.80;
-                counter ++;
-            }
+            ore = transporting(ore);
+        }
+        
+        return ore;
+    }
 
+    function lap(ore) {
+        while ((ore * 0.80) >= finalThickness) {
+            ore = ore * 0.80;
+            counter++;
+        }
+        if (counter >= 1) {
             console.log(`Lap x${counter}`);
-            transportAndRounding();
-            currentCrystal = Math.floor(currentCrystal);
-
             counter = 0;
-            while((currentCrystal - 20) >= finalThickness) {
-                currentCrystal = currentCrystal - 20;
-                counter++;
-            }
+            ore = transporting(ore);
+        }
+        
+        return ore;
+    }
 
+    function grind(ore) {
+        while ((ore - 20)>= finalThickness || (ore - 20) === finalThickness -1) {
+            ore = ore - 20;
+            counter++;
+        }
+        if (counter >= 1) {
             console.log(`Grind x${counter}`);
-            transportAndRounding();
-            currentCrystal = Math.floor(currentCrystal);
-
             counter = 0;
-            while((currentCrystal - 2) >= finalThickness){
-                currentCrystal = currentCrystal - 2;
-                counter++;
-                if((currentCrystal -2) < finalThickness){
-                    currentCrystal = currentCrystal -2;
-                    counter++;
-                }
-            }
+            ore = transporting(ore);
+        }
+        
+        return ore;
+    }
 
+    function etch(ore) {
+        while (ore > finalThickness) {
+            ore = ore - 2;
+            counter++;
+        }
+        if (counter >= 1) {
             console.log(`Etch x${counter}`);
-            transportAndRounding();
-            currentCrystal = Math.floor(currentCrystal);
-
-            if(currentCrystal < finalThickness) {
-                currentCrystal++;
-                console.log(`X-ray x1`);
-                console.log(`Finished crystal ${currentCrystal} microns`);
-            }else if(currentCrystal === finalThickness){
-                console.log(`Finished crystal ${currentCrystal} microns`);
-            }
+            counter = 0;
+            ore = transporting(ore);
         }
+        return ore;
+    }
 
-        function transportAndRounding() {
-            console.log("Transporting and washing");
+    function xRay(ore) {
+        if (ore < finalThickness) {
+            ore++;
         }
-
-        function isOver(currentCrystal) {
-            if (currentCrystal === finalThickness) {
-                console.log(`Finished crystal ${currentCrystal} microns`);
-            }
-        }
+        console.log(`X-ray x1`);
+        return ore;
+    }
 }
 
 radioCrystals([1375, 50000]);
