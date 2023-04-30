@@ -57,7 +57,7 @@ function radioCrystals(arr) {
             counter = 0;
             ore = transporting(ore);
         }
-        
+
         return ore;
     }
 
@@ -71,12 +71,12 @@ function radioCrystals(arr) {
             counter = 0;
             ore = transporting(ore);
         }
-        
+
         return ore;
     }
 
     function grind(ore) {
-        while ((ore - 20)>= finalThickness || (ore - 20) === finalThickness -1) {
+        while ((ore - 20) >= finalThickness || (ore - 20) === finalThickness - 1) {
             ore = ore - 20;
             counter++;
         }
@@ -85,7 +85,7 @@ function radioCrystals(arr) {
             counter = 0;
             ore = transporting(ore);
         }
-        
+
         return ore;
     }
 
