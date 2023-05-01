@@ -1,19 +1,28 @@
 function printDNA(num) {
-    let dnaArr = ["AT", "CG", "TT", "AG", "GG"];
-    let counter = 1;
+    let dnaArr = ["A", "T", "C", "G", "T", "T", "A", "G", "G", "G"];
+
+    let counter = 0;;
     let i = 0;
 
-    while(counter !== num +1) {
+    for (let i = 1; i <= num; i++) {
 
-        if(i === 5) {
-            i = 0;
+        let a = dnaArr[counter];
+        let b = dnaArr[counter + 1];
+
+        if (counter === 8) {
+            counter = 0;
+        } else {
+            counter += 2;
         }
-        console.log(dnaArr[i]);
-        counter++;
-        i++;
+
+        if (i === 1 || i % 4 === 1) {
+            console.log(`**${a}${b}**`);
+        } else if (i === 2 || i % 4 === 2 || i % 4 === 0) {
+            console.log(`*${a}--${b}*`);
+        } else if (i === 3 || i % 4 === 3) {
+            console.log(`${a}----${b}`);
+        }
     }
-
-
 }
 
 printDNA(4);
