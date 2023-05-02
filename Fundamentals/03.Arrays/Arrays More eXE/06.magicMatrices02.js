@@ -1,6 +1,6 @@
 function matricec(arrays) {
 
-    let rowTotal = arrays[0].reduce((a,b) => a+b);
+    let rowTotal = arrays[0].reduce((a, b) => a + b);
     let colTotal = 0;
 
     arrays.forEach(row => {
