@@ -48,12 +48,12 @@ function bunnyKill(matrix) {
         }
     };
 
-    for(let i = 0; i<matrix.length; i++) {
+    for (let i = 0; i < matrix.length; i++) {
 
-        for (let j = 0; j<matrix[i].length; j++) {
+        for (let j = 0; j < matrix[i].length; j++) {
             let value = matrix[i][j];
 
-            if(value !== 0) {
+            if (value !== 0) {
                 damageDone += value;
                 bunniesKilled++;
             }
