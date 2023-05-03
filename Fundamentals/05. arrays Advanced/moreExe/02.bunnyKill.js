@@ -6,7 +6,7 @@ function bunnyKill(matrix) {
     for (let i = 0; i < matrix.length; i++) {
         matrix[i] = matrix[i].split(" ");
         matrix[i] = matrix[i].map((el) => Number(el));
-    }
+    };
 
 
     for (let i = 0; i < coordinates.length; i++) {
@@ -31,11 +31,9 @@ function bunnyKill(matrix) {
             matrix[a - 1][b + 1] !== undefined ? matrix[a - 1][b + 1] -= bombValue : matrix[a - 1][b + 1];
             matrix[a - 1][b + 1] < 0 ? matrix[a - 1][b + 1] = 0 : matrix[a - 1][b + 1];
 
-            matrix[a - 1][b + 1] !== undefined ? matrix[a - 1][b + 1] -= bombValue : matrix[a - 1][b + 1];
-            matrix[a - 1][b + 1] < 0 ? matrix[a - 1][b + 1] = 0 : matrix[a - 1][b + 1];
         }
 
-        if (a < matrix.length) {
+        if (a < matrix.length - 1) {
 
             matrix[a + 1][b] !== undefined ? matrix[a + 1][b] -= bombValue : matrix[a + 1][b];
             matrix[a + 1][b] < 0 ? matrix[a + 1][b] = 0 : matrix[a + 1][b];
@@ -45,6 +43,12 @@ function bunnyKill(matrix) {
 
             matrix[a + 1][b + 1] !== undefined ? matrix[a + 1][b + 1] -= bombValue : matrix[a + 1][b + 1];
             matrix[a + 1][b + 1] < 0 ? matrix[a + 1][b + 1] = 0 : matrix[a + 1][b + 1];
+        }
+
+        damageDone += matrix[a][b];
+        if (matrix[a][b] > 0) {
+            matrix[a][b] = 0;
+            bunniesKilled++;
         }
     };
 
@@ -61,17 +65,22 @@ function bunnyKill(matrix) {
     }
     console.log(damageDone);
     console.log(bunniesKilled);
-}
+};
 
-bunnyKill([
-    '5 10 15 20',
+
+
+"3+3"
+
+bunnyKill(['5 10 15 20',
     '10 10 10 10',
     '10 15 10 10',
     '10 10 10 10',
-    '2,2 0,1']);
+    '2,2 2,3 0,1']
+
+);
 console.log("----------------");
 bunnyKill([
     '10 10 10',
     '10 10 10',
     '10 10 10',
-    '0,0']);
+    '0,1']);
