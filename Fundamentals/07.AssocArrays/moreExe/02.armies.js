@@ -15,7 +15,7 @@ function armies(arr) {
             let [army, count] = name.pop().split(", ");
             count = Number(count);
 
-            if(armies.hasOwnProperty(name)) {
+            if (armies.hasOwnProperty(name)) {
                 armies[name][army] = count;
             } else {
                 continue;
@@ -24,26 +24,50 @@ function armies(arr) {
             let [army, count] = data.split(" + ");
             count = Number(count);
 
-            for(let key of Object.entries(armies)) {
+            for (let key of Object.entries(armies)) {
                 let name = key[0];
                 let currentArmy = key[1];
-                if(currentArmy.hasOwnProperty(army)) {
+                if (currentArmy.hasOwnProperty(army)) {
                     let currentCount = currentArmy[army];
-                    armies[name] = {[army]: count + currentCount};
+                    currentArmy[army] = count + currentCount;
                 }
             }
 
-        }else if (data.includes("defeated")) {
+        } else if (data.includes("defeated")) {
             data = data.split(" ");
             let command = data.pop();
             let leader = data.join(" ");
 
-            if(armies.hasOwnProperty(leader)) {
+            if (armies.hasOwnProperty(leader)) {
                 delete armies[leader];
             }
         }
     }
-    console.table(armies)
+
+    let leaders = {};
+
+
+    for (let [key, value] of Object.entries(armies)) {
+        let armyCount = 0;
+        let name = key;
+
+        for (let [key, value] of Object.entries(armies[name])) {
+            armyCount += value;
+        }
+        leaders[name] = armyCount;
+    }
+
+    let leadersArr = Object.entries(leaders);
+    leadersArr.sort((a, b) => b[1] - a[1]);
+
+    for (let leader of leadersArr) {
+        console.log(`${leader[0]}: ${leader[1]}`);
+        let armyArr = Object.entries(armies[leader[0]]).sort((a, b) => b[1] - a[1]);
+
+        armyArr.forEach(element => {
+            console.log(`>>> ${element[0]} - ${element[1]}`);
+        });
+    }
 }
 
 armies(['Rick Burr arrives',
@@ -65,7 +89,7 @@ armies(['Rick Burr arrives',
     'Findlay arrives',
     'Rick Burr: Juard, 1500',
     'Wexamp arrives',
-    'Findlay: Wexamp,34540',
+    'Findlay: Wexamp, 34540',
     'Wexamp + 340',
     'Wexamp: Britox, 1155',
     'Wexamp: Juard, 43423']
