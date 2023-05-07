@@ -1,55 +1,55 @@
 function comments(arr) {
-    let users = [];
-    let articles = {};
+    let dataBase = { users: [], articleList: [], comments: {} };
 
-    for (let data of arr) {
-
-        if (data.includes("user")) {
-            data = data.split(" ");
-            let userName = data[1];
-            users.push(userName);
-
-        } else if (data.includes("article")) {
-            data = data.split(" ");
-            let articleName = data[1];
-            articles[articleName] = {};
-
-        } else if (data.includes("posts on")) {
-            data = data.split(" posts on ");
-            let username = data.shift();
-            data = data.join(" ").split(": ");
-            let articleName = data.shift();
-            data = data.join(" ").split(", ");
-            let titleName = data.shift();
-            let comment = data.shift();
-
-            if (users.includes(username) && articles.hasOwnProperty(articleName)) {
-                if (!articles[articleName].hasOwnProperty(username)) {
-                    articles[articleName][username] = [];
+    for (let line of arr) {
+        if (line.split(" ").length === 2) {
+            line = line.split(" ");
+            if (line[0] === "user") {
+                if (!dataBase.users.includes(line[1])) {
+                    dataBase.users.push(line[1]);
                 }
+            } else if (line[0] === "article") {
+                if (!dataBase.articleList.includes(line[1])) {
+                    dataBase.articleList.push(line[1]);
+                }
+            }
+        } else {
+            let [user, article, title, comment] = line
+                .replace(" posts on ", "&")
+                .replace(": ", "&")
+                .replace(", ", "&")
+                .split("&");
 
-                articles[articleName][username].push({ [titleName]: comment });
+            if (dataBase.users.includes(user) && dataBase.articleList.includes(article)) {
+                if (!dataBase.comments.hasOwnProperty(article)) {
+                    dataBase.comments[article] = [{
+                        [user]: `--- From user ${user}: ${title} - ${comment}`
+                    }]
+                } else {
+                    dataBase.comments[article].push({ [user]: `--- From user ${user}: ${title} - ${comment}` })
+                }
             }
         }
     }
 
-    let articlesArr = Object.entries(articles);
-    articlesArr.sort((a, b) => {
-        let commentCountA = countComments(a[1]);
-        let commentCountB = countComments(b[1]);
-        commentCountB - commentCountA
-    })
+    let commentsListArr = Object.entries(dataBase.comments).sort((a,b) => b[1].length - a[1].length );
+    
+    for(let comment of commentsListArr) {
+        console.log(`Comments on ${comment[0]}`);
 
+        let userCommentsArr = comment[1];
 
-    function countComments(article) {
-        let count = 0;
-        for(let user in article) {
-            count += article[user].length;
+        let sortedArr=[];
+
+        for(comment of userCommentsArr) {
+            comment = Object.entries(comment);
+            sortedArr.push(comment);
         }
-        return count;
+
+        sortedArr.sort((a, b) => a[0][0].localeCompare(b[0][0]));
+        sortedArr.forEach((el) => console.log(el[0][1]));
     }
 
-    console.table(articlesArr)
 }
 
 comments([
