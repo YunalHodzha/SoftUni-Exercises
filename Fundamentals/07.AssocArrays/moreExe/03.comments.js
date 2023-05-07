@@ -49,7 +49,6 @@ function comments(arr) {
         sortedArr.sort((a, b) => a[0][0].localeCompare(b[0][0]));
         sortedArr.forEach((el) => console.log(el[0][1]));
     }
-
 }
 
 comments([
