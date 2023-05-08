@@ -49,17 +49,14 @@ function bookShelf(arr) {
 
         for (let el of booksArr) {
             let book = Object.entries(el[1]);
-            
+
             bookArrSorted.push(book);
         }
 
         bookArrSorted = bookArrSorted.sort((a, b) => a[0][0].localeCompare(b[0][0]));
 
         bookArrSorted.forEach((el) => console.log(`--> ${el[0][0]}: ${el[0][1]}`));
-        
-
     }
-
 }
 
 bookShelf([
