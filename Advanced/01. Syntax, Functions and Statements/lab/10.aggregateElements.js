@@ -3,7 +3,7 @@ function solve(arr) {
     let inverseSum = 0;
     let str = '';
 
-    for(let el of arr) {
+    for (let el of arr) {
         sum += el;
         inverseSum += 1 / el;
         str += el;
