@@ -3,7 +3,7 @@ function print(arr, N) {
     for (let i = 0; i < arr.length; i += N) {
         newArr.push(arr[i]);
     }
-    console.log(newArr)
+    return newArr;
 }
 
 print(['5',
