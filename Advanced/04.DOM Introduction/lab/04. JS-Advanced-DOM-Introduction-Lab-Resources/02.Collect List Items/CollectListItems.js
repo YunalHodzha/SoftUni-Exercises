@@ -7,4 +7,4 @@ function extractText() {
     for (const text of content) {
         document.getElementById("result").textContent += `${text}\n` 
     }
-}
+}  
