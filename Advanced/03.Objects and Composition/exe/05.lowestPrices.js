@@ -17,7 +17,6 @@ function lowestPrices(arr) {
         const [town, price] = sorted[0];
         console.log(`${product} -> ${price} (${town})`);
     }
-
 }
 
 lowestPrices(['Sample Town | Sample Product | 1000',
