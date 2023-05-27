@@ -1,5 +1,7 @@
-function solution(n) {
-    return n;
+function solution(partialAppliedNum) {
+    return function(n) {
+        return partialAppliedNum + n;
+    }
 }
 
 
