@@ -15,7 +15,7 @@ function solve() {
             let value = cells[i].value || "0";
             cellValues.push(parseInt(value));
         }
-
+ 
         if ((cellValues[0] !== cellValues[1] && cellValues[1] !== cellValues[2]) &&
             (cellValues[3] !== cellValues[4] && cellValues[4] !== cellValues[5]) &&
             (cellValues[6] !== cellValues[7] && cellValues[7] !== cellValues[8]) &&
