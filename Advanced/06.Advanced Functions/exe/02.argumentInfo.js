@@ -11,7 +11,7 @@ function solve() {
         obj[type]++;
     })
 
-    Object.keys(obj)
+    Object.keys(obj)  
         .sort((a, b) => obj[b] - obj[a])
         .forEach((c) => console.log(`${c} = ${obj[c]}`));
 }
