@@ -8,10 +8,10 @@ function validate() {
     function validateEmail(e) {
         const emailInput = document.getElementById("email").value;
 
-        if (emailPattern.test(emailInput)) {
-            e.target.classList.remove("error");
+        if(emailPattern.test(emailInput)) {
+            e.target.removeAttribute("class");
             return
         }
-        e.target.classList.add("error");
+        e.target.className = "error";
     }
 }
