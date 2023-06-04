@@ -24,7 +24,6 @@ function tickets(array, criteria) {
         return a[criteria].localeCompare(b[criteria]);
     })
 
-    console.table(ticketsList)
     return ticketsList;
 }
 
