@@ -16,7 +16,7 @@ class Company {
             this.departments[department] = [];
         }
 
-        this.departments[department].push({name: name, salary: salary, position: position, department: department });
+        this.departments[department].push({ name: name, salary: salary, position: position, department: department });
         return `New employee is hired. Name: ${name}. Position: ${position}`;
     }
 
@@ -29,24 +29,24 @@ class Company {
             let totalSalarySum = 0;
             let counter = 0;
 
-            for(let employee of employees) {
+            for (let employee of employees) {
                 totalSalarySum += employee.salary;
                 counter++;
             }
 
             let currentAvg = (totalSalarySum / counter).toFixed(2);
-            if(currentAvg > bestAvgSalary) {
+            if (currentAvg > bestAvgSalary) {
                 bestAvgSalary = currentAvg;
                 bestDepartment = department;
             }
         }
 
         let sortedEmployees = this.departments[bestDepartment];
-        sortedEmployees.sort((a,b) => {
-            if(a.salary === b.salary) {
+        sortedEmployees.sort((a, b) => {
+            if (a.salary === b.salary) {
                 return a.name.localeCompare(b.name);
             }
-           return b.salary - a.salary
+            return b.salary - a.salary
         })
 
         let result = [`Best Department is: ${bestDepartment}`, `Average salary: ${bestAvgSalary}`];
@@ -56,7 +56,6 @@ class Company {
 
         return result.join("\n");
     }
-
 }
 
 let c = new Company();
