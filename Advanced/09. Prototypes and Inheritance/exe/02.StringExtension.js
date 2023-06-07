@@ -31,10 +31,14 @@
             return '.'.repeat(n);
         }
 
-        let newStr = this.split(" ");
-        newStr.pop();
-        newStr = newStr.join(" ");
-        return newStr = newStr + "...";
+        if (this.includes(" ")) {
+            let newStr = this.split(" ");
+            newStr.pop();
+            newStr = newStr.join(" ");
+            return newStr = newStr + "...";
+        }
+
+        
     }
 
 
