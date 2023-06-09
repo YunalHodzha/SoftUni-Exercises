@@ -37,16 +37,15 @@
 // }
 
 
-{
-    
-    "configurations": [
-        {
-           
-            "request": "launch",
-            "name": "${file}",
-            "file": "${file}",
-            "webRoot": "${fileDirname}"
-        }
-    ]
-}
-
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "type": "chrome",
+//             "request": "launch",
+//             "name": "Open Template.html",
+//             "file": "${file}",
+//             "webRoot": "${fileDirname}"
+//         }
+//     ]
+// }
