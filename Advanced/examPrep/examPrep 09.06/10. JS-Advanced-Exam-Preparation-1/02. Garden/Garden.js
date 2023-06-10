@@ -83,7 +83,6 @@ class Garden {
                 }
             result += myStorage.join(", ");
         }
-
         return result
     }
 }
