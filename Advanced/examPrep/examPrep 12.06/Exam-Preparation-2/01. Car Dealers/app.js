@@ -22,7 +22,7 @@ function solve() {
 
     let tableBody = document.getElementById("table-body");
     let tableRow = document.createElement("tr");
-    tableRow.classList.add("row");
+    tableRow.classList.add("row");  
 
     let makeValueElement = document.createElement("td");
     makeValueElement.textContent = make.value;
@@ -74,10 +74,10 @@ function solve() {
     tableBody.appendChild(tableRow);
 
     function edit(e) {
-      let current = e.target.parentElement;
-      current = current.parentElement;
+      let current = e.target.parentElement.parentElement;
+      
 
-      let postElements = document.getElementsByTagName("td");
+      let postElements = current.getElementsByTagName("td");
       let makeValue = postElements[0].textContent;
       let modelValue = postElements[1].textContent;
       let yearValue = postElements[2].textContent;
@@ -100,7 +100,7 @@ function solve() {
       let current = e.target.parentElement;
       current = current.parentElement;
 
-      let postElements = document.getElementsByTagName("td");
+      let postElements = current.getElementsByTagName("td");
 
       let makeValue = postElements[0].textContent;
       let modelValue = postElements[1].textContent;
