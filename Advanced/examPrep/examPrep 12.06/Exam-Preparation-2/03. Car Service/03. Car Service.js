@@ -45,4 +45,7 @@ const carService = {
   },
 };
 
+let result = carService.discount(8, 100)
+console.log(result)
+
 module.exports = {carService};

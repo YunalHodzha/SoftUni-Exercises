@@ -37,5 +37,63 @@ describe("Tests …", function () {
             expect(result1Func).to.throw(Error, "Invalid input");
             expect(result2Func).to.Throw(Error, "Invalid input");
         })
+
+        it("should return correct message, if number of parts are less or equal to 2", function () {
+            let parts = 2;
+            let parts1 = 1;
+
+            let result1 = carService.discount(parts, 100);
+            let result2 = carService.discount(parts1, 100);
+
+            expect(result1).to.be.equal("You cannot apply a discount");
+            expect(result2).to.be.equal("You cannot apply a discount");
+        })
+
+        it("should return correct message with discount message for the total price", function () {
+            let parts = 7;
+            //Discount applied! You saved 15$
+            let parts2 = 8;
+            //Discount applied! You saved 30$
+
+            let result = carService.discount(parts, 100);
+            let result2 = carService.discount(parts2, 100);
+
+            expect(result).to.be.equal("Discount applied! You saved 15$");
+            expect(result2).to.be.equal("Discount applied! You saved 30$")
+        })
+    })
+    describe("partsToBuy", function () {
+        it("should throw an Error if inputs are not arrays", function () {
+            let firstInput = "1,2,3";
+            let secondInput = [1, 2, 3];
+            let firstInput2 = [1, 2, 3];
+            let secondInput2 = {};
+
+            let resul1Func = () => carService.partsToBuy(firstInput, secondInput);
+            let resul2Func = () => carService.partsToBuy(firstInput2, secondInput2);
+
+            expect(resul1Func).to.throw(Error, "Invalid input");
+            expect(resul2Func).to.throw(Error, "Invalid input");
+        })
+
+        it("should return 0 if partsCatalog array is empty", function () {
+            let catalog = [];
+            let neededPart = ["blowoff valve", "injectors"];
+
+            let result = carService.partsToBuy(catalog, neededPart);
+
+            expect(result).to.be.equal(0);
+        })
+
+        it("should return the correct total sum", function () {
+            let partsCatalog = ([{
+                part: "blowoff valve", price: 145
+            }, { part: "coil springs", price: 230 }, { part: "windshield", price: 300 }]);
+            let neededParts = ["blowoff valve", "windshield"];
+
+            let result = carService.partsToBuy(partsCatalog, neededParts);
+
+            expect(result).to.be.equal(445);
+        })
     })
 });
