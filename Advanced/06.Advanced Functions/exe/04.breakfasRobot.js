@@ -23,7 +23,7 @@ function solution() {
             let recipe = library[item];
             for (const el in recipe) {
                 if (recipe[el] * quantity > storedElements[el]) {
-                    return `Error not enough ${el} in stock`;
+                    return `Error: not enough ${el} in stock`;
                 }
             }
             for (const el in recipe) {
@@ -31,7 +31,7 @@ function solution() {
             }
             return "Success";
         } else if (command === "restock") {
-            storedElements[item] += quantity
+            storedElements[item] += quantity;
             return `Success`;
         } else if (command === "report") {
             let result = [];
