@@ -1,71 +1,131 @@
+const enumIcon = {
+    Sunny: "&#x2600", // ☀
+    "Partly sunny": '&#x26C5', // ⛅
+    Overcast: '&#x2601', // ☁
+    Rain: '&#x2614', // ☂
+    Degrees: '&#176' // °
+}
+const forecastContainer = document.getElementById('forecast');
+
 function attachEvents() {
-    const locationInputElement = document.getElementById('location');
-    const getWeatherBtn = document.getElementById('submit');
-    getWeatherBtn.innerHTML = '&#176;'
+    document.getElementById('submit').addEventListener('click', getWeather);
+}
 
-    const forecastElem = document.getElementById('forecast');
-    const currentElem = document.getElementById('current');
-    const upcomingElem = document.getElementById('upcoming');
+async function getWeather() {
+    const url = 'http://localhost:3030/jsonstore/forecaster/locations';
+    const townName = document.getElementById('location').value;
 
-    const degree = '&#176;'
-
-    getWeatherBtn.addEventListener('click', getWeather);
-
-    async function getWeather() {
-        forecastElem.style.display = "block";
-
-        const locationInputValue = locationInputElement.value;
-
-        const response = await fetch(`http://localhost:3030/jsonstore/forecaster/locations`);
+    try {
+        const response = await fetch(url);
         const data = await response.json();
 
+        const info = data.find(x => x.name === townName);
 
-        const location = locationByName(data, locationInputValue);
-        const locationCode = location.code;
+        createForCaster(info.code);
+    } catch {
+        forecastContainer.style.display = "block";
+        forecastContainer.textContent = 'Error';
+    }
+}
 
-        const firstResponse = await fetch(`http://localhost:3030/jsonstore/forecaster/today/${locationCode}`);
-        const firstResponseData = await firstResponse.json();
-        const forecast = firstResponseData.forecast;
-        
-
-        const secondResponse = await fetch(`http://localhost:3030/jsonstore/forecaster/upcoming/${locationCode}`);
-        const secondResponseData = await secondResponse.json();
-
-        //first Div
-        const forecastDiv = document.createElement('div');
-        forecastDiv.classList.add('forecasts');
-        currentElem.appendChild(forecastDiv);
-
-        const conditionSpan = document.createElement('span');
-        conditionSpan.classList.add("condition");
-        forecastDiv.appendChild(conditionSpan);
-
-        //inside spans
-        const nameSpan = document.createElement('span');
-        nameSpan.classList.add('forecast-data');
-        nameSpan.textContent = `${firstResponseData.name}`;
-        forecastDiv.appendChild(nameSpan);
-
-        const secondSpan = document.createElement('span');
-        secondSpan.classList.add('forecast-data');
-        secondSpan.textContent = `${forecast.low}${degree}/${forecast.high}${degree}`;
-        forecastDiv.appendChild(secondSpan);
-
-        const thirdSpan = document.createElement('span');
-        thirdSpan.classList.add('forecast-data');
-        thirdSpan.textContent = ''
-        forecastDiv.appendChild(thirdSpan);
+async function createForCaster(code) {
+    const currentSection = document.getElementById('current');
+    const upcomingContainer = document.getElementById('upcoming');
 
 
+    const urlToday = `http://localhost:3030/jsonstore/forecaster/today/${code}`;
+    const urlThreeDay = `http://localhost:3030/jsonstore/forecaster/upcoming/${code}`;
 
-        console.log(firstResponseData)
-        console.log(secondResponseData)
+    //TODO use Promise.all
+    try {
+        const responsToday = await fetch(urlToday);
+        const dataToday = await responsToday.json();
+
+        const responseUpcoming = await fetch(urlThreeDay);
+        const dataUpcoming = await responseUpcoming.json();
+
+        forecastContainer.style.display = "block";
+        const togayHtmlTemp = createToday(dataToday);
+        currentSection.appendChild(togayHtmlTemp);
+
+        const upcomingHtmlTemp = createUpcoming(dataUpcoming);
+        upcomingContainer.appendChild(upcomingHtmlTemp);
+    } catch {
+        forecastContainer.textContent = 'Error';
     }
 
-    function locationByName(data, name) {
-        return data.find(location => location.name === name);
-    }
+}
 
+function createUpcoming(data) {
+
+    const container = document.createElement('div');
+    container.classList.add('forecast-info');
+
+    data.forecast.forEach(data => {
+        const spanHolder = generateSpan(data);
+        container.appendChild(spanHolder);
+    });
+    return container;
+}
+
+function generateSpan(data) {
+    const { condition, high, low } = data;
+
+    const spanHolder = document.createElement('span');
+    spanHolder.classList.add('upcoming');
+
+    const iconSpan = document.createElement('span');
+    iconSpan.classList.add('symbol');
+    iconSpan.innerHTML = enumIcon[condition];
+
+    const tempSpan = document.createElement('span');
+    tempSpan.classList.add('forecast-data');
+    tempSpan.innerHTML = `${low}${enumIcon['Degrees']}/${high}${enumIcon['Degrees']}`;
+
+    const conditionSpan = document.createElement('span');
+    conditionSpan.classList.add('forecast-data');
+    conditionSpan.textContent = condition;
+
+    spanHolder.appendChild(iconSpan)
+    spanHolder.appendChild(tempSpan)
+    spanHolder.appendChild(conditionSpan);
+
+    return spanHolder;
+}
+
+function createToday(data) {
+    const { condition, high, low } = data.forecast
+
+    const conditionContainer = document.createElement('div');
+    conditionContainer.classList.add('forecasts');
+
+    const conditionIconSpan = document.createElement('span');
+    conditionIconSpan.classList.add('condition', 'symbol');
+    conditionIconSpan.innerHTML = enumIcon[condition];
+
+    const conditionSpan = document.createElement('span');
+    conditionSpan.classList.add('condition');
+
+    const nameSpan = document.createElement('span');
+    nameSpan.classList.add('forecast-data');
+    nameSpan.textContent = data.name;
+
+    const tempSpan = document.createElement('span');
+    tempSpan.classList.add('forecast-data');
+    tempSpan.innerHTML = `${low}${enumIcon['Degrees']}/${high}${enumIcon['Degrees']}`;
+
+    const conditionTxtSpan = document.createElement('span');
+    conditionTxtSpan.classList.add('forecast-data');
+    conditionTxtSpan.innerHTML = condition;
+
+    conditionSpan.appendChild(nameSpan);
+    conditionSpan.appendChild(tempSpan);
+    conditionSpan.appendChild(conditionTxtSpan);
+
+    conditionContainer.appendChild(conditionIconSpan);
+    conditionContainer.appendChild(conditionSpan);
+
+    return conditionContainer;
 }
 
 attachEvents();
