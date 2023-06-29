@@ -11,9 +11,9 @@ function lockedProfile() {
     show();
     async function show() {
 
-    fetch('http://localhost:3030/jsonstore/advanced/profiles')
-        .then(res => res.json())
-        .then(data => {
+    const response = await fetch('http://localhost:3030/jsonstore/advanced/profiles')
+    const data = await response.json();
+      
             const [radioLock, radioUnclock, userName, _email, _age] = Array.from(inputElements);
             Object.values(data).forEach(p => {
                 const { _id, age, email, username } = p;
@@ -27,7 +27,7 @@ function lockedProfile() {
                 mainElement.appendChild(currentDivElement);
             });
             
-        });
+       
 }
 
 function showMore(e) {
@@ -42,4 +42,4 @@ function showMore(e) {
             e.target.innerText = 'Hide it';
         }
     }
-}
+}}
