@@ -7,7 +7,7 @@ function solve() {
     let stopName = "";
 
     async function depart() {
-
+        console.log("Hello")
         try {
             const response = await fetch(`http://localhost:3030/jsonstore/bus/schedule/${nextStopId}`);
 
