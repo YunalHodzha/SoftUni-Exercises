@@ -39,7 +39,7 @@ function register() {
                 const data = await response.json();
 
 
-                sessionStorage.setItem('accesToken', data.accessToken);
+                sessionStorage.setItem('accessToken', data.accessToken);
                 sessionStorage.setItem('loggedUser', data.email);
                 sessionStorage.setItem('id', data._id);
 
@@ -48,6 +48,13 @@ function register() {
                 notificationP.textContent = err.message;
             }
         }
+    }
+
+    const accessToken = sessionStorage.getItem('accessToken');
+    if (accessToken) {
+        document.getElementById('logout').style.display = "inline";
+    } else {
+        document.getElementById('logout').style.display = "none";
     }
 }
 
