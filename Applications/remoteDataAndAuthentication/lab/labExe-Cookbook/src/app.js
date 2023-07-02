@@ -1,12 +1,22 @@
 async function getRecipes() {
-    const response = await fetch('http://localhost:3030/jsonstore/cookbook/recipes');
+    const response = await fetch('http://localhost:3030/data/recipes');
     const recipes = await response.json();
 
     return Object.values(recipes);
 }
 
+async function getRecipesWithSelectdColumns(columns) {
+    let columnsString = columns.join(',');
+    let encodedPart = encodeURIComponent(columnsString);
+    console.log(encodedPart)
+    const response = await fetch(`http://localhost:3030/data/recipes?select=${encodedPart}`);
+    const recipe = await response.json();
+
+    return recipe;
+}
+
 async function getRecipeById(id) {
-    const response = await fetch('http://localhost:3030/jsonstore/cookbook/details/' + id);
+    const response = await fetch('http://localhost:3030/data/recipes/' + id);
     const recipe = await response.json();
 
     return recipe;
@@ -49,8 +59,19 @@ function createRecipeCard(recipe) {
 window.addEventListener('load', async () => {
     const main = document.querySelector('main');
 
-    const recipes = await getRecipes();
+    const recipes = await getRecipesWithSelectdColumns(['_id', 'name', 'img']);
     const cards = recipes.map(createRecipePreview);
+
+    let isUserLogged = sessionStorage.getItem('accessToken');
+    if(isUserLogged == undefined) {
+        //let user = document.getElementById('user');
+        let guest = document.getElementById('guest');
+       // user.style.display = 'block';
+        guest.style.display = 'inline-block';
+    } else {
+        let user = document.getElementById('user');
+         user.style.display = 'inline-block';
+    }
 
     main.innerHTML = '';
     cards.forEach(c => main.appendChild(c));
