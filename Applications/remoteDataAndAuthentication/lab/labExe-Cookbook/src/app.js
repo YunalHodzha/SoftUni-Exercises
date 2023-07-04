@@ -1,9 +1,85 @@
+window.addEventListener('load', async () => {
+    const main = document.querySelector('main');
+
+    let pages = {
+        createPage: document.getElementById('createRecipe'),
+        loginPage: document.getElementById('login'),
+        registerPage: document.getElementById('register'),
+    }
+
+    main.innerHTML = '';
+
+    let links = {
+        catalogLink: document.getElementById('catalogLink'),
+        createPageLink: document.getElementById('createRecipeLink'),
+        loginLink: document.getElementById('loginLink'),
+        registerLink: document.getElementById('registerLink'),
+    }
+
+    links.catalogLink.addEventListener('click', showCatalog);
+    // links.createPageLink.addEventListener('click', showCreateRecipe);
+    links.loginLink.addEventListener('click', showLogin);
+    //links.registerLink.addEventListener('click', showRegister);
+
+    showCatalog();
+
+    async function showLogin() {
+        main.innerHTML = '';
+        main.appendChild(pages.loginPage);
+
+        let form = pages.loginPage.querySelector('form');
+        form.addEventListener('submit', login);
+
+        async function login(e) {
+            e.preventDefault();
+            let formData = new FormData(form);
+
+            let url = 'http://localhost:3030/users/login';
+            let setting = {
+                method: 'Post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: formData.get('email'),
+                    password: formData.get('password')
+                })
+            }
+
+            let response = await fetch(url, setting);
+            let result = await response.json();
+
+            sessionStorage.setItem('accessToken', result.accessToken);
+            showCatalog();
+        }
+    }
+
+    async function showCatalog() {
+        main.innerHTML = '';
+        const recipes = await getRecipesWithSelectdColumns(['_id', 'name', 'img']);
+        const cards = recipes.map(createRecipePreview);
+
+        let isUserLogged = sessionStorage.getItem('accessToken');
+        if (isUserLogged == undefined) {
+            //let user = document.getElementById('user');
+            let guest = document.getElementById('guest');
+            // user.style.display = 'block';
+            guest.style.display = 'inline-block';
+        } else {
+            let user = document.getElementById('user');
+            user.style.display = 'inline-block';
+        }
+
+        cards.forEach(c => main.appendChild(c));
+    }
+});
+
+// later logic
 async function getRecipes() {
     const response = await fetch('http://localhost:3030/data/recipes');
     const recipes = await response.json();
 
     return Object.values(recipes);
 }
+
 
 async function getRecipesWithSelectdColumns(columns) {
     let columnsString = columns.join(',');
@@ -55,27 +131,6 @@ function createRecipeCard(recipe) {
 
     return result;
 }
-
-window.addEventListener('load', async () => {
-    const main = document.querySelector('main');
-
-    const recipes = await getRecipesWithSelectdColumns(['_id', 'name', 'img']);
-    const cards = recipes.map(createRecipePreview);
-
-    let isUserLogged = sessionStorage.getItem('accessToken');
-    if (isUserLogged == undefined) {
-        //let user = document.getElementById('user');
-        let guest = document.getElementById('guest');
-        // user.style.display = 'block';
-        guest.style.display = 'inline-block';
-    } else {
-        let user = document.getElementById('user');
-        user.style.display = 'inline-block';
-    }
-
-    main.innerHTML = '';
-    cards.forEach(c => main.appendChild(c));
-});
 
 function e(type, attributes, ...content) {
     const result = document.createElement(type);
