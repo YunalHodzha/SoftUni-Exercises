@@ -17,39 +17,90 @@ window.addEventListener('load', async () => {
     }
 
     links.catalogLink.addEventListener('click', showCatalog);
-    // links.createPageLink.addEventListener('click', showCreateRecipe);
+    //links.createPageLink.addEventListener('click', showCreateRecipe);
     links.loginLink.addEventListener('click', showLogin);
-    //links.registerLink.addEventListener('click', showRegister);
+    links.registerLink.addEventListener('click', showRegister);
 
     showCatalog();
+
+    async function showRegister(e) {
+        main.innerHTML = '';
+        main.appendChild(pages.registerPage);
+
+        let form = pages.registerPage.querySelector('form');
+        form.removeEventListener('submit', register)
+        form.addEventListener('submit', register);
+    }
+
+    async function register(e) {
+        e.preventDefault();
+        let form = e.target;
+        let formData = new FormData(form);
+
+        let rePass = formData.get('rePass');
+        let password = formData.get('password');
+
+        //validate
+        if (password !== rePass) {
+            return alert('The passwords need to match');
+        }
+
+        let url = 'http://localhost:3030/users/register';
+        let setting = {
+            method: 'Post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: formData.get('email'),
+                password: formData.get('password')
+            })
+        }
+
+        let response = await fetch(url, setting);
+        try {
+            if (response.status == 200) {
+                let result = await response.json();
+
+                sessionStorage.setItem('accessToken', result.accessToken);
+                showCatalog();
+            } else {
+                let jsonResponse = await response.json(); 
+                throw new Error(jsonResponse.message);
+            }
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    async function login(e) {
+        e.preventDefault();
+        let form = e.target;
+        let formData = new FormData(form);
+
+        let url = 'http://localhost:3030/users/login';
+        let setting = {
+            method: 'Post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: formData.get('email'),
+                password: formData.get('password')
+            })
+        }
+
+        let response = await fetch(url, setting);
+        let result = await response.json();
+
+        sessionStorage.setItem('accessToken', result.accessToken);
+        showCatalog();
+    }
 
     async function showLogin() {
         main.innerHTML = '';
         main.appendChild(pages.loginPage);
 
+
         let form = pages.loginPage.querySelector('form');
         form.addEventListener('submit', login);
 
-        async function login(e) {
-            e.preventDefault();
-            let formData = new FormData(form);
-
-            let url = 'http://localhost:3030/users/login';
-            let setting = {
-                method: 'Post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: formData.get('email'),
-                    password: formData.get('password')
-                })
-            }
-
-            let response = await fetch(url, setting);
-            let result = await response.json();
-
-            sessionStorage.setItem('accessToken', result.accessToken);
-            showCatalog();
-        }
     }
 
     async function showCatalog() {
@@ -58,13 +109,16 @@ window.addEventListener('load', async () => {
         const cards = recipes.map(createRecipePreview);
 
         let isUserLogged = sessionStorage.getItem('accessToken');
+        let guest = document.getElementById('guest');
+        let user = document.getElementById('user');
         if (isUserLogged == undefined) {
             //let user = document.getElementById('user');
-            let guest = document.getElementById('guest');
+     
             // user.style.display = 'block';
             guest.style.display = 'inline-block';
+            user.style.display = "none";
         } else {
-            let user = document.getElementById('user');
+            guest.style.display = 'none';
             user.style.display = 'inline-block';
         }
 
