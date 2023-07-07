@@ -26,6 +26,11 @@
     border-radius: 4px;
 }
 
+#container{
+    width: 80%;
+    margin: auto;
+}
+
 .notifications {
     background-color: rgba(238, 74, 74, 0.699);
     margin: 0 auto;
