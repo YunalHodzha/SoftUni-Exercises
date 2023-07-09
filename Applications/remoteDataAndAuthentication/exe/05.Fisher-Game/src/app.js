@@ -37,6 +37,8 @@ function app() {
 
         window.location = "index.html"
     }
+
+    document.getElementById('')
 }
 
 app()

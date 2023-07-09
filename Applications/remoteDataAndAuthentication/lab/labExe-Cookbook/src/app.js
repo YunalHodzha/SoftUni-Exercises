@@ -18,7 +18,7 @@ window.addEventListener('load', async () => {
     }
 
     links.catalogLink.addEventListener('click', () => showCatalog(main));
-    links.createPageLink.addEventListener('click', showCreateRecipe);
+    //links.createPageLink.addEventListener('click', showCreateRecipe);
     links.loginLink.addEventListener('click',() => showLogin(main));
     links.registerLink.addEventListener('click',() => showRegister(main));
     links.logoutLink.addEventListener('click',() => logout(main))
