@@ -5,4 +5,14 @@ export function registerPage() {
     console.log("registerPage.....")
 
     showView(section);
+
+    //addeventlistener
+    //get form data
+    //form data validation
+    //request
+    //error handling
+    //form.reset
+    //update
+    //homepage
+
 }

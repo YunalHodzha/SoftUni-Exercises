@@ -6,7 +6,7 @@ catalog.addEventListener('click', (event) => {
     if(event.target.tagName === 'BUTTON') {
         event.preventDefault();
 
-        console.log('Event')
+        
     }
 });
 
