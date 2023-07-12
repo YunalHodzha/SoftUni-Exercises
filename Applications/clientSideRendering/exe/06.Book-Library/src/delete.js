@@ -1,4 +1,4 @@
-import { getBooks } from "./app.js";
+import { getBooks, loadBooks } from "./app.js";
 
 
 export async function deleteFunq(e) {
@@ -12,4 +12,5 @@ export async function deleteFunq(e) {
     })
 
     getBooks();
+    loadBooks();
 }

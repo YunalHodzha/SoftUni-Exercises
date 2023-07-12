@@ -1,4 +1,4 @@
-import { URL, getBooks } from "./app.js";
+import { URL, getBooks, loadBooks } from "./app.js";
 
 export async function createFunq(e) {
     e.preventDefault();
@@ -15,14 +15,14 @@ export async function createFunq(e) {
         return;
     }
 
-    // const request = await fetch(URL, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application.json" },
-    //     body: JSON.stringify({
-    //         author: author,
-    //         title: title
-    //     })
-    // })
+    const request = await fetch(URL, {
+        method: "POST",
+        headers: { "Content-Type": "application.json" },
+        body: JSON.stringify({
+            author: author,
+            title: title
+        })
+    })
 
     const response = await request.json();
     
@@ -35,4 +35,5 @@ export async function createFunq(e) {
 
     add_form.reset();
     getBooks();
+    loadBooks();
 }

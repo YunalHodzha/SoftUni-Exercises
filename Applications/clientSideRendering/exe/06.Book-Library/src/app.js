@@ -8,13 +8,19 @@ const bodyElem = document.querySelector('body');
 export const URL = 'http://localhost:3030/jsonstore/collections/books';
 getBooks();
 
-export async function getBooks(e) {
+export async function loadBooks(e) {
     const response = await fetch(URL);
     const result = await response.json();
 
 
+    const booksListElem = document.getElementsByTagName('tbody')[0];
+    render(booksTemplate(Object.entries(result)), booksListElem);
+}
+
+export async function getBooks(e) {
+
     const tableElem = html`
-        <button id="loadBooks" @click=${getBooks}>LOAD ALL BOOKS</button>
+        <button id="loadBooks" @click=${loadBooks}>LOAD ALL BOOKS</button>
     <table>
         <thead>
             <tr>
@@ -36,7 +42,7 @@ export async function getBooks(e) {
         <input type="submit" value="Submit" @click=${createFunq}>
     </form>
 
-    <form id="edit-form" style="display: none;">
+    <form id="edit-form" style="display: none">
         <input type="hidden" name="id">
         <h3>Edit book</h3>
         <label>TITLE</label>
@@ -48,11 +54,6 @@ export async function getBooks(e) {
     `
 
     render(tableElem, bodyElem);
-
-    const booksListElem = document.getElementsByTagName('tbody')[0];
-    render(booksTemplate(Object.entries(result)), booksListElem);
-
-    return tableElem;
 }
 
 

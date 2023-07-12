@@ -1,5 +1,4 @@
-import { URL, getBooks } from "./app.js";
-
+import { URL, getBooks, loadBooks } from "./app.js";
 
 let id = '';
 export function updateFunq(e) {
@@ -45,5 +44,6 @@ export async function saveFunq(e) {
 
     editForm.reset();
     getBooks();
+    loadBooks();
     editForm.style.display = "none";
 }
