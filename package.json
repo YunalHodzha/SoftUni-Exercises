@@ -1,5 +1,21 @@
 {
   "dependencies": {
-    "page": "^1.11.6"
-  }
+    "chai": "^4.3.7",
+    "lit-html": "^2.7.5",
+    "mocha": "^10.2.0",
+    "page": "^1.11.6",
+    "playwright": "^1.36.1",
+    "playwright-chromium": "^1.36.1",
+    "start": "^5.1.0"
+  },
+  "name": "softuni-exercises",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
