@@ -61,4 +61,7 @@ export async function detailsPage(ctx) {
             ctx.page.redirect('/catalog');
         }
     }
+
+    const sal = document.querySelector("#details-wrapper p #salary-number");
+    const item = document.querySelector('#details-wrapper #info-wrapper #details-description span')
 }
