@@ -1,132 +1,145 @@
-document.getElementById('loadBooks').addEventListener('click', load);
-const url = 'http://localhost:3030/jsonstore/collections/books';
-const tBodyElem = document.querySelector('tbody');
-const formElem = document.querySelector('form');
-formElem.addEventListener('submit', submitFunq);
-
-async function submitFunq(e) {
-    e.preventDefault();
-    const data = new FormData(formElem);
-
-    const title = data.get('title').trim();
-    const author = data.get('author').trim();
-
-    if (!title || !author) {
-        return;
-    }
-
-    const requestData = JSON.stringify({
-        author: author,
-        title: title,
-    })
-
-    const btns = document.getElementsByTagName("button");
-    const btn = btns[btns.length - 1];
-
-    if (btn.textContent === "Save") {
-        let btnId = e.target.id;
-        await fetch(`${url}/${btnId}`, {
-            method: "PUT",
-            'Content-Type': 'application.json',
-            body: requestData,
-        })
-    } else {
-        await fetch(url, {
-            method: "POST",
-            'Content-Type': 'application.json',
-            body: requestData,
-        })
-    }
-    formElem.reset();
-    load()
-}
-
-async function EditFunq(e) {
-    e.preventDefault()
-    let btnId = e.target.id;
-
-    const response = await fetch(`${url}/${btnId}`);
-    const { author, title } = await response.json();
-
-    document.querySelector("[name='title']").value = title;
-    document.querySelector("[name='author']").value = author;
-
-    const h3Elem = document.querySelector("h3");
-    h3Elem.textContent = "Edit FORM";
-
-    const btns = document.getElementsByTagName("button");
-    const btn = btns[btns.length - 1];
-
-    btn.textContent = "Save";
-}
-
-async function updateFunq(e, id) {
-    e.preventDefault();
-    const data = new FormData(formElem);
-
-    const title = data.get('title').trim();
-    const author = data.get('author').trim();
-
-    if (!title || !author) {
-        return;
-    }
-
-    const requestData = JSON.stringify({
-        author: author,
-        title: title,
-    })
-
-    await fetch(`${url}/${id}`, {
-        method: "PUT",
-        'Content-Type': 'application.json',
-        body: requestData,
-    })
-    formElem.reset();
-    load()
-}
-
-async function deleteFunq(e) {
-    let btnId = e.target.id;
-
-    await fetch(`${url}/${btnId}`, {
-        method: "DELETE",
-    })
-    load()
-}
-
-async function load() {
-
-    const response = await fetch(url);
-    const data = await response.json();
-    tBodyElem.innerHTML = "";
-
-    Object.entries(data).forEach(([key, value]) => {
-        const trElem = document.createElement('tr');
-
-        const nameTd = document.createElement('td');
-        nameTd.textContent = value.title;
-
-        const authorTd = document.createElement('td');
-        authorTd.textContent = value.author;
-
-        const actionTd = document.createElement('td');
-        const editBtn = document.createElement('button');
-        editBtn.addEventListener("click", EditFunq);
-        editBtn.setAttribute("id", key);
-        editBtn.textContent = "Edit";
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.addEventListener('click', deleteFunq);
-        deleteBtn.setAttribute("id", key)
-        deleteBtn.textContent = "Delete";
-        actionTd.appendChild(deleteBtn);
-        actionTd.appendChild(editBtn);
-
-        trElem.appendChild(nameTd);
-        trElem.appendChild(authorTd);
-        trElem.appendChild(actionTd);
-
-        tBodyElem.appendChild(trElem);
-    })
-    formElem.reset();
-}
+function attachEvents() { 
+    document.getElementById('loadBooks').addEventListener('click', render); 
+    document.querySelector('form button').addEventListener('click', onSubmit); 
+  } 
+   
+  attachEvents(); 
+  render(); 
+   
+  async function request(url, id, options) { 
+    if (options && options.body != undefined) { 
+      Object.assign(options, { 
+        headers: { 
+          'Content-Type': 'application/json' 
+        } 
+      }) 
+    } 
+   
+    const response = await fetch(url + id, options); 
+    const data = await response.json(); 
+   
+    return data; 
+  } 
+   
+  async function render() { 
+    const data = await request( 
+      'http://localhost:3030/jsonstore/collections/books/', '' 
+    ); 
+   
+    const tbody = document.querySelector('tbody'); 
+   
+    const fragment = document.createDocumentFragment(); 
+   
+    Object.entries(data).forEach(book => { 
+      const tr = createElement('tr', '', book[0]); 
+      tr.appendChild(createElement('td', book[1].title)); 
+      tr.appendChild(createElement('td', book[1].author)); 
+   
+      const td = createElement('td'); 
+      td.appendChild(createElement('button', 'Edit')); 
+      td.appendChild(createElement('button', 'Delete')); 
+      tr.appendChild(td); 
+   
+      fragment.appendChild(tr); 
+    }); 
+   
+    tbody.replaceChildren(fragment); 
+  } 
+   
+  function onSubmit(e) { 
+    e.preventDefault(); 
+   
+    if (e.target.textContent == 'Submit') { 
+      createBook(); 
+    } 
+  } 
+   
+  function createBook() { 
+    const author = document.querySelector('[name="author"]'); 
+    const title = document.querySelector('[name="title"]'); 
+    const body = { author: author.value, title: title.value }; 
+   
+    if (body.author && body.title) { 
+      request('http://localhost:3030/jsonstore/collections/books/', '', { 
+        method: 'POST', 
+        body: JSON.stringify(body), 
+      }); 
+   
+      author.value = ''; 
+      title.value = ''; 
+   
+      render(); 
+    } 
+  } 
+   
+  async function deleteBook(id) { 
+    await request('http://localhost:3030/jsonstore/collections/books/', id, { 
+      method: 'DELETE', 
+    }); 
+  } 
+   
+  let id; 
+   
+  function onEdit(e) { 
+    id = e.target.parentElement.parentElement.id; 
+    const title = document.getElementById(id).children[0].textContent; 
+    const author = document.getElementById(id).children[1].textContent; 
+    const button = document.querySelector('form button'); 
+    document.querySelector('form h3').textContent = 'Edit FORM'; 
+    document.querySelector('[name="title"]').value = title; 
+    document.querySelector('[name="author"]').value = author; 
+    button.textContent = 'Save'; 
+    button.removeAttribute('click', onSubmit); 
+    button.addEventListener('click', saveBook); 
+   
+    document.getElementById(id).remove(); 
+  } 
+   
+  async function saveBook() { 
+    const button = document.querySelector('form button'); 
+    const author = document.querySelector('[name="author"]'); 
+    const title = document.querySelector('[name="title"]'); 
+    const body = { author: author.value, title: title.value }; 
+   
+    await request( 
+      'http://localhost:3030/jsonstore/collections/books/', 
+      id, 
+      { 
+        method: 'PUT', 
+        body: JSON.stringify(body), 
+      } 
+    ); 
+   
+    button.removeAttribute('click', saveBook); 
+    button.addEventListener('click', onSubmit); 
+    button.textContent = 'Submit'; 
+    document.querySelector('form h3').textContent = 'FORM'; 
+    author.value = ''; 
+    title.value = ''; 
+    render(); 
+  } 
+   
+  function onDelete(e) { 
+    const id = e.target.parentElement.parentElement.id; 
+    deleteBook(id); 
+    render(); 
+  } 
+   
+  function createElement(type, content, id) { 
+    const element = document.createElement(type); 
+   
+    if (type == 'button') { 
+      const ev = content == 'Edit' ? onEdit : onDelete; 
+      element.addEventListener('click', ev); 
+    } 
+   
+    if (content) { 
+      element.textContent = content; 
+    } 
+   
+    if (id != undefined) { 
+      element.id = id; 
+    } 
+   
+    return element; 
+  }
