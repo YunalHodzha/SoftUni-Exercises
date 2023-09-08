@@ -1,13 +1,14 @@
-const http = require('http');
-const fs = require('fs/promises');
-const handlers = require('./handlers');
+const express = require('express');
+const path = require('path');
+const app = express();
 const port = 3000;
+const homeHtmlContent = require('./handlers/home.js')
 
-const server = http.createServer((req, res) => {
-    console.log('server is running')
-    for (let handler of handlers) {
-        if(!handler(req, res)) {
-            break;
-        }
-    }
-}).listen(port);
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+    res.status(200);
+    res.send(homeHtmlContent);
+})
+
+app.listen(port, () => console.log(`Express running on port: ${port}...`));

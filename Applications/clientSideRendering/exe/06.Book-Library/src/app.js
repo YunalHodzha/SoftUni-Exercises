@@ -1,63 +1,53 @@
-import { html, render } from "../../node_modules/lit-html/lit-html.js";
-import { createFunq } from "./create.js";
-import { booksTemplate } from "./template.js";
-import { saveFunq } from "./update.js";
+import { homeView } from './home.js';
+import { loginView } from './login.js';
+import { signupView } from './signup.js';
+import { createView } from './create.js';
+import { detailsView } from './detail.js';
+import { editView } from './edit.js';
+import { logout } from './logout.js';
+import { updateNav } from './util.js';
 
+const html = {
+    navBar: document.querySelector('nav'),
 
-const bodyElem = document.querySelector('body');
-export const URL = 'http://localhost:3030/jsonstore/collections/books';
-getBooks();
+    createButton: document.querySelector('#add-movie-button a')
 
-export async function loadBooks(e) {
-    const response = await fetch(URL);
-    const result = await response.json();
-
-
-    const booksListElem = document.getElementsByTagName('tbody')[0];
-    render(booksTemplate(Object.entries(result)), booksListElem);
 }
 
-export async function getBooks(e) {
+const routes = {
+    '/': homeView,
+    '/login': loginView,
+    '/register': signupView,
+    '/logout': logout,
+    
+    '/create': createView,
+    // more routes?
+};
 
-    const tableElem = html`
-        <button id="loadBooks" @click=${loadBooks}>LOAD ALL BOOKS</button>
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+// add event listeners
 
-    <form id="add-form">
-        <h3>Add book</h3>
-        <label>TITLE</label>
-        <input type="text" name="title" placeholder="Title...">
-        <label>AUTHOR</label>
-        <input type="text" name="author" placeholder="Author...">
-        <input type="submit" value="Submit" @click=${createFunq}>
-    </form>
 
-    <form id="edit-form" style="display: none">
-        <input type="hidden" name="id">
-        <h3>Edit book</h3>
-        <label>TITLE</label>
-        <input type="text" name="title" placeholder="Title...">
-        <label>AUTHOR</label>
-        <input type="text" name="author" placeholder="Author...">
-        <input type="submit" @click=${saveFunq} value="Save">
-    </form>
-    `
+html.navBar.addEventListener('click', onNavigation);
+html.createButton.addEventListener('click', onNavigation);
 
-    render(tableElem, bodyElem);
+function onNavigation(event) {
+    if (event.target.tagName === 'A' && event.target.href) {
+        event.preventDefault();
+
+        const href = new URL(event.target.href).pathname;
+
+        const view = routes[href];
+
+        if (typeof view == 'function') {
+            view();
+        }
+
+        updateNav();
+    }
 }
 
-
-
-
+// start application from home page
+updateNav();
+homeView();
 
 
